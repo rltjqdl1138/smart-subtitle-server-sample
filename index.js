@@ -90,7 +90,6 @@ class tcpServer {
 		console.log(`onRead:: Index:${_index}`)
 		const index = _index >= list.length ? list.length-1 : _index
         this.lastData = index
-		/*
 		console.log(`* Valid Sockets: ${this.clients.length}`)
 		console.log(
 			`Subtitles ... ( ${index} / ${list.length})`
@@ -99,7 +98,6 @@ class tcpServer {
 			`  [CH] ${list[index].CH}` +
 			`  [JP] ${list[index].JP}\n`
 		)
-*/
         this.send(JSON.stringify(list[index]))
     }
 	//Create Connection Successfully
