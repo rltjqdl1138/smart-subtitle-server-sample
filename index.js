@@ -94,12 +94,12 @@ class tcpServer {
 		console.log(`* Valid Sockets: ${this.clients.length}`)
 		console.log(
 			`Subtitles ... ( ${index} / ${list.length})`
-			`  [KO] ${list[str].KO}` +
-			`  [EN] ${list[str].EN}` +
-			`  [CH] ${list[str].CH}` +
-			`  [JP] ${list[str].JP}\n`
+			`  [KO] ${list[index].KO}` +
+			`  [EN] ${list[index].EN}` +
+			`  [CH] ${list[index].CH}` +
+			`  [JP] ${list[index].JP}\n`
 		)
-		
+
         this.send(JSON.stringify(list[index]))
     }
 	//Create Connection Successfully
