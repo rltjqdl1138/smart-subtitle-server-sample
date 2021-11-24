@@ -104,7 +104,7 @@ class tcpServer {
 
 	//Close Connection Successfully
 	onClose(socket) {
-		const ind = this.clients.findIndex( e => e.remoteAddress === socket.remoteAddress && e.remotePort === socket.remotePort)
+		const ind = this.clients.findIndex( e => e && e.remoteAddress === socket.remoteAddress && e.remotePort === socket.remotePort)
 		if(ind >=0 && this.clients[ind]){
 			console.log("onClose", socket.remoteAddress, socket.remotePort)
 			this.clients[ind] = undefined
