@@ -87,16 +87,16 @@ class tcpServer {
 	onRead(str){
         const _index = parseInt(str, 10)
         if(isNaN(_index)) return;
-		console.log(`onRead:: Index:${_index}`)
+		const now = new Date()
+		console.log(`onRead:: Index:${_index} .../${now.toLocaleString()}/`)
 		const index = _index >= list.length ? list.length-1 : _index
         this.lastData = index
 		console.log(`* Valid Sockets: ${this.clients.length}`)
-		console.log(
-			`Subtitles ... ( ${index} / ${list.length})`
-			`  [KO] ${list[index].KO}` +
-			`  [EN] ${list[index].EN}` +
-			`  [CH] ${list[index].CH}` +
-			`  [JP] ${list[index].JP}\n`
+		console.log( `Subtitles ... ( \x1b[37m${index}\x1b[0m / ${list.length})\n` +
+			`  [KO] ${list[index].KO}\n` +
+			`  [EN] ${list[index].EN}\n` +
+			`  [CH] ${list[index].CH}\n` +
+			`  [JP] ${list[index].JP}\n\n`
 		)
         this.send(JSON.stringify(list[index]))
     }
