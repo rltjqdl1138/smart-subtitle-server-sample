@@ -85,7 +85,6 @@ class tcpServer {
         }
 	}
 	onRead(str){
-		console.log(str)
         const _index = parseInt(str, 10)
         if(isNaN(_index)) return;
 		console.log(`onRead:: Index:${_index}`)
@@ -105,10 +104,15 @@ class tcpServer {
 
 	//Close Connection Successfully
 	onClose(socket) {
-		console.log("onClose", socket.remoteAddress, socket.remotePort)
+		const ind = this.clients.findIndex( e => e.remoteAddress === socket.remoteAddress && e.remotePort === socket.remotePort)
+		if(ind >=0 && this.clients[ind]){
+			console.log("onClose", socket.remoteAddress, socket.remotePort)
+			this.clients[ind]
+		}
 	}
 }
 function writeData(socket, data){
+	if(!socket) return;
     var success = !socket.write(data);
     if (!success){
       (function(socket, data){
