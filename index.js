@@ -7,13 +7,33 @@ const sheetName = excelFile.SheetNames[0]
 const firstSheet = excelFile.Sheets[sheetName]
 const jsonData = xlsx.utils.sheet_to_json(firstSheet, {defval:""})
 
-const list = jsonData.map( e => converting(e))
-function converting(item){
+const list = jsonData.reduce( (prev, e, index) =>
+	[...prev, converting(e, index)],
+	[{
+		"current_index": 0,
+		"last_index":jsonData.length+1,
+		"KO":"",
+		"EN":"",
+		"CH":"",
+		"JP":"",
+	}]
+)
+list.push({
+	"current_index": jsonData.length+1,
+	"last_index":jsonData.length+1,
+	"KO":"",
+	"EN":"",
+	"CH":"",
+	"JP":"",
+})
+function converting(item, index){
     return {
+		"current_index": index,
+		"last_index":jsonData.length+1,
         "KO":item["한국어"],
         "EN":item["영어"],
         "CH":item["중국어"],
-        "JP":item["일본어"]
+        "JP":item["일본어"],
     }
 }
 //const raw = require('raw-socket')
@@ -23,6 +43,8 @@ class tcpServer {
 		this.context = {
 			port: port
 		}
+		
+		this.lastData = 0
 		this.merge = {}
         this.clients = []
 		this.server = net.createServer((socket) => {
@@ -41,8 +63,7 @@ class tcpServer {
 			//Data event 핸들러 등록
 			socket.on('data', (_data) => {
                 const data = _data.toString()
-                if(data.search('abcd') === 0)
-                    this.onRead(data.replace('abcd',''))
+				this.onRead(data)
 			})
 		})	
 		
@@ -64,16 +85,22 @@ class tcpServer {
         }
 	}
 	onRead(str){
-        const index = parseInt(str, 10)
-        console.log(index)
-        if(isNaN(index)) return;
-        
-        this.send(JSON.stringify(list[str]))
+		console.log(str)
+        const _index = parseInt(str, 10)
+        if(isNaN(_index)) return;
+		console.log(`onRead:: Index:${_index}`)
+		const index = _index >= list.length ? list.length-1 : _index
+        this.lastData = index
+        this.send(JSON.stringify(list[index]))
     }
 	//Create Connection Successfully
 	onCreate(socket) {
         this.clients.push(socket)
 		console.log("onCreate", socket.remoteAddress, socket.remotePort)
+		const lastData = JSON.stringify(list[this.lastData])
+		const buf = Buffer.from(lastData+'\n', 'utf8');
+		//console.log(buf)
+		socket.write(buf)
 	}
 
 	//Close Connection Successfully
